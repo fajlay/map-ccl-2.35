@@ -38,12 +38,13 @@ function MappMap(h, d) {
         Z = d.poiList,
         e = this;
     this.display = function(a) {
-        if (s) google.load("maps", "3", {
-            other_params: "sensor=false",
-            callback: function() {
-                F(a)
-            }
-        });
+        if (s)
+            google.load("maps", "3", {
+                other_params: "sensor=false",
+                callback: function() {
+                    F(a)
+                }
+            });
         else {
             google.load("maps", "3", {
                 other_params: "sensor=false&language=" + E
@@ -56,10 +57,12 @@ function MappMap(h, d) {
 
     function F(h) {
         var i = document.getElementById(b);
-        if (!i) return;
+        if (!i)
+            return;
         var o = {
             zoom: k ? k : 0,
-            center: g ? new google.maps.LatLng(parseFloat(g.lat), parseFloat(g.lng)) : new google.maps.LatLng(0, 0),
+            center: g ? new google.maps.LatLng(parseFloat(g.lat),
+                parseFloat(g.lng)) : new google.maps.LatLng(0, 0),
             mapTypeId: r,
             mapTypeControl: R,
             mapTypeControlOptions: {
@@ -75,18 +78,28 @@ function MappMap(h, d) {
             overviewMapControlOptions: G
         };
         c = new google.maps.Map(i, o);
+        c.panBy(0, -50);
         if (W) {
-            var m = mQuery("<div id= '" + b + "_poweredby' style='font-size:10px; background:white; color:black; padding:2px 2px 2px 2px; margin-bottom:10px;display:block'>" + U + "</div>").get(0);
+            var m = mQuery(
+                "<div id= '" + b + "_poweredby' style='font-size:10px; background:white; color:black; padding:2px 2px 2px 2px; margin-bottom:10px;display:block'>" + U + "</div>").get(0);
             c.controls[google.maps.ControlPosition.BOTTOM].push(m)
         }
         ab && P();
-        if (typeof j == "undefined" || j.indexOf("google") == -1) j = "http://maps.google.com";
-        else if (j.toLowerCase().indexOf("http") == -1) j = "http://" + j;
-        f = new google.maps.InfoWindow;
-        for (var d = 0; d < a.length; d++) D(d);
+        if (typeof j == "undefined" || j.indexOf("google") == -1)
+            j = "http://maps.google.com";
+        else if (j.toLowerCase().indexOf("http") == -1)
+            j = "http://" + j;
+        f = new google.maps.InfoWindow({
+            maxWidth: 0,
+            pixelOffset: new google.maps.Size(0, +33)
+        });
+        for (var d = 0; d < a.length; d++)
+            D(d);
         if (!g || g.lat == 0 && g.lng == 0)
-            if (!k || k == 0) e.recenter(null, true);
-            else e.recenter(null, false);
+            if (!k || k == 0)
+                e.recenter(null, true);
+            else
+                e.recenter(null, false);
             (s || Z) && l();
         n == "inline" && K();
         Q == true && a[0] && google.maps.event.trigger(a[0].marker, "click");
@@ -115,13 +128,22 @@ function MappMap(h, d) {
         return c
     };
     this.openMarker = function(d) {
-        var e = "<div class='mapp-overlay'>";
+        var e = "<div class='mapp-overlay' id='mapp-overlay-m'>";
+
+        e += "<div class='mapp-overlay-venue'><td><b>";
+        e += w;
+        e += "</b></td></div>";
+
         e += "<div class='mapp-overlay-title'>";
-        if (a[d].titleUrl) e += "<a href='" + a[d].titleUrl + "' alt='" + a[d].title + "'>" + a[d].title + "</a>";
-        else e += a[d].title;
+        if (a[d].titleUrl)
+            e += "<a href='" + a[d].titleUrl + "' alt='" + a[d].title + "'>" + a[d].title + "</a>";
+        else
+            e += a[d].title;
         e += "</div><div class='mapp-overlay-body'>" + a[d].body + "</div><div class='mapp-overlay-links'>";
-        if (o) e += "<a href='#' id='" + b + "_editmarker' alt='" + mappl10n.edit + "'>" + mappl10n.edit + "</a> | <a href='#' id='" + b + "_deletemarker' alt = '" + mappl10n.del + "'>" + mappl10n.del + "</a> | <a href='#' id='" + b + "_zoommarker' alt = '" + mappl10n.zoom + "'>" + mappl10n.zoom + "</a></div>";
-        else if (n == "inline" || n == "google") e += "<a href='#' id='" + b + "_directionslink'>" + mappl10n.directions + "</a></div>";
+        if (o)
+            e += "<a href='#' id='" + b + "_editmarker' alt='" + mappl10n.edit + "'>" + mappl10n.edit + "</a> | <a href='#' id='" + b + "_deletemarker' alt = '" + mappl10n.del + "'>" + mappl10n.del + "</a> | <a href='#' id='" + b + "_zoommarker' alt = '" + mappl10n.zoom + "'>" + mappl10n.zoom + "</a></div>";
+        else if (n == "inline" || n == "google")
+            e += "<a href='#' id='" + b + "_directionslink'>" + mappl10n.directions + "</a></div>";
         e += "</div>";
         z(d);
         f.setContent(e);
@@ -151,7 +173,8 @@ function MappMap(h, d) {
             i.setPanel(null);
             if (i.getMap()) {
                 i.setMap(null);
-                for (var d = 0; d < a.length; d++) a[d].marker.setMap(c)
+                for (var d = 0; d < a.length; d++)
+                    a[d].marker.setMap(c)
             }
         }
     };
@@ -167,34 +190,40 @@ function MappMap(h, d) {
             d();
             return true
         }
-        if (!t) t = new google.maps.Geocoder;
-        t.geocode({
-            address: a.val(),
-            region: X,
-            language: E
-        }, function(f, h) {
-            for (var g = 0; g < f.length; g++)(g > 0 && f[g].formatted_address == f[g - 1].formatted_address || f[g].formatted_address == "") && f.splice(g, 1);
-            if (!f || f.length == 0 || h != google.maps.GeocoderStatus.OK) {
-                mQuery(a).addClass("mapp-address-error");
-                mQuery(c).html(mappl10n.no_address);
-                return false
-            }
-            if (f.length > 1) {
-                var i = mappl10n.did_you_mean + "<a href='#' id='" + b + "_acceptaddress'>" + f[0].formatted_address + "</a>";
-                mQuery(c).html(i);
-                mQuery("#" + b + "_acceptaddress").click(function() {
+        if (!t)
+            t = new google.maps.Geocoder;
+        t
+            .geocode({
+                    address: a.val(),
+                    region: X,
+                    language: E
+                },
+                function(f, h) {
+                    for (var g = 0; g < f.length; g++)
+                        (g > 0 && f[g].formatted_address == f[g - 1].formatted_address || f[g].formatted_address == "") && f.splice(g, 1);
+                    if (!f || f.length == 0 || h != google.maps.GeocoderStatus.OK) {
+                        mQuery(a).addClass("mapp-address-error");
+                        mQuery(c).html(mappl10n.no_address);
+                        return false
+                    }
+                    if (f.length > 1) {
+                        var i = mappl10n.did_you_mean + "<a href='#' id='" + b + "_acceptaddress'>" + f[0].formatted_address + "</a>";
+                        mQuery(c).html(i);
+                        mQuery("#" + b + "_acceptaddress").click(
+                            function() {
+                                mQuery(a).val(
+                                    f[0].formatted_address);
+                                e.geoCode(a, c, d);
+                                return false
+                            });
+                        return false
+                    }
+                    mQuery(a).removeClass("mapp-address-error");
                     mQuery(a).val(f[0].formatted_address);
-                    e.geoCode(a, c, d);
-                    return false
-                });
-                return false
-            }
-            mQuery(a).removeClass("mapp-address-error");
-            mQuery(a).val(f[0].formatted_address);
-            mQuery(c).html("");
-            d(f);
-            return true
-        })
+                    mQuery(c).html("");
+                    d(f);
+                    return true
+                })
     };
 
     function P() {
@@ -202,12 +231,14 @@ function MappMap(h, d) {
             a = mQuery(d).get(0);
         c.controls[google.maps.ControlPosition.TOP_CENTER].push(a);
         google.maps.event.addDomListener(a, "click", function() {
-            if (!m) m = new google.maps.TrafficLayer;
+            if (!m)
+                m = new google.maps.TrafficLayer;
             if (m.getMap()) {
                 mQuery("#" + b + "_traffic_checkbox").attr("checked", "");
                 m.setMap(null)
             } else {
-                mQuery("#" + b + "_traffic_checkbox").attr("checked", "checked");
+                mQuery("#" + b + "_traffic_checkbox")
+                    .attr("checked", "checked");
                 m.setMap(c)
             }
         })
@@ -232,7 +263,8 @@ function MappMap(h, d) {
 
     function z(e) {
         for (var c = [], b = 0; b < a.length; b++) {
-            if (b == e) continue;
+            if (b == e)
+                continue;
             a[b].marker && c.push({
                 marker: a[b].marker,
                 zindex: a[b].marker.getZIndex()
@@ -245,7 +277,8 @@ function MappMap(h, d) {
             marker: a[e].marker,
             zindex: a[e].marker.getZIndex()
         });
-        for (var d = 0; d < c.length; d++) c[d].marker.setZIndex(d)
+        for (var d = 0; d < c.length; d++)
+            c[d].marker.setZIndex(d)
     }
 
     function y(b) {
@@ -253,16 +286,20 @@ function MappMap(h, d) {
             a[b].marker.setTitle(mappl10n.click_and_drag);
             return
         }
-        if (V) a[b].marker.setTitle(mQuery("<div>").html(a[b].title).text());
-        else a[b].marker.setTitle(null)
+        if (V)
+            a[b].marker.setTitle(mQuery("<div>").html(a[b].title).text());
+        else
+            a[b].marker.setTitle(null)
     }
 
     function q(b) {
         var c = a[b].marker;
         google.maps.event.clearListeners(c, "click");
         google.maps.event.addListener(c, "click", function() {
+            //alert(c);
             e.openMarker(b)
         });
+        e.openMarker(b);
         google.maps.event.addListener(c, "dragstart", function() {
             f.close()
         });
@@ -286,7 +323,8 @@ function MappMap(h, d) {
             c.setCenter(a[d].marker.getPosition());
             var b = c.getZoom();
             b = parseInt(b + b * .3, 10);
-            if (b > 19) b = 19;
+            if (b > 19)
+                b = 19;
             c.setZoom(b);
             return false
         });
@@ -297,33 +335,36 @@ function MappMap(h, d) {
     }
 
     function K() {
-        mQuery("#" + b + "_get_directions").click(function() {
-            var e = mQuery("#" + b + "_saddr"),
-                d = mQuery("#" + b + "_daddr"),
-                c = mQuery("#" + b + "_saddr_corrected"),
-                a = mQuery("#" + b + "_daddr_corrected");
-            f.close();
-            B(e, d, c, a);
-            return false
-        });
-        mQuery("#" + b + "_addrswap").click(function() {
-            var c = mQuery("#" + b + "_saddr"),
-                a = mQuery("#" + b + "_daddr"),
-                d = c.val();
-            c.val(a.val());
-            a.val(d);
-            mQuery("#" + b + "_get_directions").click();
-            return false
-        });
-        mQuery("#" + b + "_print_directions").click(function() {
-            var c = mQuery("#" + b + "_saddr"),
-                a = mQuery("#" + b + "_daddr"),
-                e = mQuery("#" + b + "_saddr_corrected"),
-                d = mQuery("#" + b + "_daddr_corrected"),
-                f = j + "?saddr=" + c.val() + "&daddr=" + a.val() + "&pw=2";
-            window.open(f);
-            B(c, a, e, d)
-        });
+        mQuery("#" + b + "_get_directions").click(
+            function() {
+                var e = mQuery("#" + b + "_saddr"),
+                    d = mQuery("#" + b + "_daddr"),
+                    c = mQuery("#" + b + "_saddr_corrected"),
+                    a = mQuery("#" + b + "_daddr_corrected");
+                f.close();
+                B(e, d, c, a);
+                return false
+            });
+        mQuery("#" + b + "_addrswap").click(
+            function() {
+                var c = mQuery("#" + b + "_saddr"),
+                    a = mQuery("#" + b + "_daddr"),
+                    d = c.val();
+                c.val(a.val());
+                a.val(d);
+                mQuery("#" + b + "_get_directions").click();
+                return false
+            });
+        mQuery("#" + b + "_print_directions").click(
+            function() {
+                var c = mQuery("#" + b + "_saddr"),
+                    a = mQuery("#" + b + "_daddr"),
+                    e = mQuery("#" + b + "_saddr_corrected"),
+                    d = mQuery("#" + b + "_daddr_corrected"),
+                    f = j + "?saddr=" + c.val() + "&daddr=" + a.val() + "&pw=2";
+                window.open(f);
+                B(c, a, e, d)
+            });
         mQuery("#" + b + "_close_directions").click(function() {
             e.closeDirections();
             return false
@@ -336,33 +377,41 @@ function MappMap(h, d) {
     }
 
     function B(g, f, l, k, j) {
-        var d, h = mQuery("#" + b + "_directions .mapp-travelmode.selected").attr("id");
-        if (h.indexOf("walk") >= 0) d = google.maps.DirectionsTravelMode.WALKING;
-        else if (h.indexOf("bike") >= 0) d = google.maps.DirectionsTravelMode.BICYCLING;
-        else d = google.maps.DirectionsTravelMode.DRIVING;
+        var d, h = mQuery("#" + b + "_directions .mapp-travelmode.selected")
+            .attr("id");
+        if (h.indexOf("walk") >= 0)
+            d = google.maps.DirectionsTravelMode.WALKING;
+        else if (h.indexOf("bike") >= 0)
+            d = google.maps.DirectionsTravelMode.BICYCLING;
+        else
+            d = google.maps.DirectionsTravelMode.DRIVING;
         e.geoCode(g, l, function() {
             e.geoCode(f, k, function() {
                 var l = document.getElementById(b + "_directions_renderer");
-                if (!p) p = new google.maps.DirectionsService;
+                if (!p)
+                    p = new google.maps.DirectionsService;
                 var e = {
                         travelMode: d,
                         provideRouteAlternatives: true
                     },
                     k = MappMap.stringToLatLng(g.val()),
-                    h = MappMap.stringToLatLng(f.val());
+                    h = MappMap
+                    .stringToLatLng(f.val());
                 e.origin = k ? k.latLng : g.val();
                 e.destination = h ? h.latLng : f.val();
                 p.route(e, function(d, e) {
                     switch (e) {
                         case google.maps.DirectionsStatus.OK:
-                            for (var b = 0; b < a.length; b++) a[b].marker.setMap(null);
-                            if (!i) i = new google.maps.DirectionsRenderer({
-                                map: c,
-                                panel: l,
-                                hideRouteList: false,
-                                directions: d,
-                                draggable: true
-                            });
+                            for (var b = 0; b < a.length; b++)
+                                a[b].marker.setMap(null);
+                            if (!i)
+                                i = new google.maps.DirectionsRenderer({
+                                    map: c,
+                                    panel: l,
+                                    hideRouteList: false,
+                                    directions: d,
+                                    draggable: true
+                                });
                             else {
                                 i.setMap(c);
                                 i.setPanel(l);
@@ -404,17 +453,21 @@ function MappMap(h, d) {
         g.lat = c.getCenter().lat();
         g.lng = c.getCenter().lng();
         google.maps.event.trigger(c, "resize");
-        c.setCenter(new google.maps.LatLng(parseFloat(g.lat), parseFloat(g.lng)))
+        c
+            .setCenter(new google.maps.LatLng(parseFloat(g.lat),
+                parseFloat(g.lng)))
     };
     this.recenter = function(b, e) {
         var d = new google.maps.LatLngBounds;
-        if (typeof b == "undefined") b = null;
+        if (typeof b == "undefined")
+            b = null;
         if (a.length == 0) {
             c.setCenter(new google.maps.LatLng(0, 0));
             !k && c.setZoom(1);
             return
         }
-        if (a.length == 1) b = 0;
+        if (a.length == 1)
+            b = 0;
         if (b !== null) {
             if (e && a[b].viewport && a[b].viewport != {
                     sw: {
@@ -425,26 +478,35 @@ function MappMap(h, d) {
                         lat: 0,
                         lng: 0
                     }
-                }) c.fitBounds(new google.maps.LatLngBounds(new google.maps.LatLng(a[b].viewport.sw.lat, a[b].viewport.sw.lng), new google.maps.LatLng(a[b].viewport.ne.lat, a[b].viewport.ne.lng)));
+                })
+                c.fitBounds(new google.maps.LatLngBounds(
+                    new google.maps.LatLng(a[b].viewport.sw.lat,
+                        a[b].viewport.sw.lng), new google.maps.LatLng(
+                        a[b].viewport.ne.lat, a[b].viewport.ne.lng)));
             else {
                 c.setCenter(a[b].marker.getPosition());
                 e && c.setZoom(14)
             }
             return
         }
-        for (var f = 0; f < a.length; f++) d.extend(a[f].marker.getPosition());
-        if (e) c.fitBounds(d);
-        else c.setCenter(d.getCenter())
+        for (var f = 0; f < a.length; f++)
+            d.extend(a[f].marker.getPosition());
+        if (e)
+            c.fitBounds(d);
+        else
+            c.setCenter(d.getCenter())
     };
 
     function S(c) {
         var d = confirm(mappl10n.delete_prompt);
-        if (!d) return;
+        if (!d)
+            return;
         f.close();
         a[c].marker.setMap(null);
         a.splice(c, 1);
         l();
-        for (var b = 0; b < a.length; b++) q(b)
+        for (var b = 0; b < a.length; b++)
+            q(b)
     }
 
     function C(b) {
@@ -497,10 +559,11 @@ function MappMap(h, d) {
         g.lat = c.getCenter().lat();
         g.lng = c.getCenter().lng();
         r = c.getMapTypeId();
-        for (d = 0; d < a.length; d++) a[d].point = {
-            lat: a[d].marker.getPosition().lat(),
-            lng: a[d].marker.getPosition().lng()
-        };
+        for (d = 0; d < a.length; d++)
+            a[d].point = {
+                lat: a[d].marker.getPosition().lat(),
+                lng: a[d].marker.getPosition().lng()
+            };
         var e = {
             mapid: v,
             width: x,
@@ -512,18 +575,21 @@ function MappMap(h, d) {
             mapTypeId: r
         };
         e.pois = [];
-        for (d = 0; d < a.length; d++) e.pois[d] = {
-            point: a[d].point,
-            title: a[d].title,
-            body: a[d].body,
-            address: a[d].address,
-            correctedAddress: a[d].correctedAddress,
-            iconid: a[d].iconid,
-            viewport: a[d].viewport
-        };
+        for (d = 0; d < a.length; d++)
+            e.pois[d] = {
+                point: a[d].point,
+                title: a[d].title,
+                body: a[d].body,
+                address: a[d].address,
+                correctedAddress: a[d].correctedAddress,
+                iconid: a[d].iconid,
+                viewport: a[d].viewport
+            };
         var f;
-        if (typeof Prototype !== "undefined" && typeof Object.toJSON !== "undefined") f = Object.toJSON(e);
-        else f = JSON.stringify(e);
+        if (typeof Prototype !== "undefined" && typeof Object.toJSON !== "undefined")
+            f = Object.toJSON(e);
+        else
+            f = JSON.stringify(e);
         var j = {
             action: "mapp_map_save",
             map: f,
@@ -540,15 +606,18 @@ function MappMap(h, d) {
 
     function l() {
         for (var h, c = "", f = 0; f < a.length; f++) {
-            if (s) h = "<td class='mapp-marker'>[icon]</td><td><b>[title]</b>[bodytext]</td></tr>";
-            else h = a[f].poiListTemplate ? a[f].poiListTemplate : d.poiListTemplate;
+            if (s)
+                h = "<td class='mapp-marker'>[icon]</td><td><b>[title]</b>[bodytext]</td></tr>";
+            else
+                h = a[f].poiListTemplate ? a[f].poiListTemplate : d.poiListTemplate;
             h = h.toLowerCase();
             c += "<tr data-marker='" + f + "'>" + h + "</tr>";
             var i = MappMap.parseAddress(a[f].correctedAddress),
                 g = {
                     icon: getIconHtml(a[f].iconid),
                     body: a[f].body ? a[f].body + "<br/>" : "",
-                    bodyText: a[f].body ? mQuery("<div>" + a[f].body + "</div>").text() + "<br/>" : "",
+                    bodyText: a[f].body ? mQuery("<div>" + a[f].body + "</div>")
+                        .text() + "<br/>" : "",
                     directions: n != "none" ? "<a href='#' class='poi_list_directions'>" + mappl10n.directions + "</a>" : "",
                     address: a[f].address ? a[f].address : "",
                     correctedAddress: a[f].correctedAddress ? a[f].correctedAddress : "",
@@ -556,9 +625,12 @@ function MappMap(h, d) {
                     parsedAddress2: i.secondLine
                 };
             if (a[f].title)
-                if (a[f].url) g.title = "<a href='" + a[f].url + "'>" + a[f].title + "</a><br/>";
-                else g.title = a[f].title + "<br/>";
-            else g.title = "";
+                if (a[f].url)
+                    g.title = "<a href='" + a[f].url + "'>" + a[f].title + "</a><br/>";
+                else
+                    g.title = a[f].title + "<br/>";
+            else
+                g.title = "";
             c = c.replace("[icon]", g.icon);
             c = c.replace("[title]", g.title);
             c = c.replace("[body]", g.body);
@@ -601,8 +673,10 @@ function MappMap(h, d) {
         }
     };
     getIconPicker = function(c, b, a) {
-        if (typeof mappIcons == "undefined") a(null);
-        else mappIcons.getIconPicker(c, b, a)
+        if (typeof mappIcons == "undefined")
+            a(null);
+        else
+            mappIcons.getIconPicker(c, b, a)
     }
 }
 MappMap.ajax = function(c, b, a) {
@@ -622,7 +696,8 @@ MappMap.ajax = function(c, b, a) {
             }
         },
         error: function(d, b, a) {
-            if (typeof a == "undefined") return;
+            if (typeof a == "undefined")
+                return;
             var c = mappl10n.ajax_error + "\r\nStatus=" + b + "\r\n" + a;
             alert(c);
             return
@@ -674,16 +749,18 @@ MappMap.ajaxIconGetList = function(a) {
     })
 };
 MappMap.parseAddress = function(a) {
-    if (!a || a == "") return {
-        firstLine: "",
-        secondLine: ""
-    };
+    if (!a || a == "")
+        return {
+            firstLine: "",
+            secondLine: ""
+        };
     if (a.lastIndexOf(", USA") > 0) {
         a = a.slice(0, a.lastIndexOf(", USA"));
-        if (a.indexOf(",") == a.lastIndexOf(",")) return {
-            firstLine: a,
-            secondLine: ""
-        }
+        if (a.indexOf(",") == a.lastIndexOf(","))
+            return {
+                firstLine: a,
+                secondLine: ""
+            }
     }
     return a.indexOf(",") == -1 ? {
         firstLine: a,
@@ -705,14 +782,19 @@ MappMap.stringToLatLng = function(b) {
     var c = b.split(",", 2),
         d = Number(c[0]),
         e = Number(c[1]);
-    if (isNaN(d) || isNaN(e)) return false;
+    if (isNaN(d) || isNaN(e))
+        return false;
     a.latLng = new google.maps.LatLng(d, e);
     a.title = a.title ? a.title : a.latLng.toUrlValue();
     return a
 };
 
-function MappEditor(j, o) {
-    for (var b = null, c = o, a = [], i = 0; i < j.length; i++) a.push(new MappMap(j[i], c));
+function MappEditor(ma, j, o) {
+    for (var b = null, c = o, a = [], i = 0; i < j.length; i++)
+        a.push(new MappMap(j[i], c));
+
+    for (var bmn = null, ccnn = o, aaa = [], iii = 0; iii < ma.length; iii++)
+        aaa.push(new MappMap(ma[iii], o));
     mQuery(document).ready(function() {
         p()
     });
@@ -720,10 +802,15 @@ function MappEditor(j, o) {
     function p() {
         g();
         mQuery("#mapp_metabox").show();
-        mQuery("#mapp_paypal").click(function() {
-            window.open("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4339298", "Donate");
-            return false
-        });
+        mQuery("#mapp_paypal")
+            .click(
+                function() {
+                    window
+                        .open(
+                            "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4339298",
+                            "Donate");
+                    return false
+                });
         mQuery("#publish").click(function() {
             h()
         });
@@ -732,12 +819,19 @@ function MappEditor(j, o) {
         });
         mQuery("#mapp_create_btn").click(function() {
             k();
+            mQuery("#mapp_save_btn_ms").hide();
             return false
         });
         mQuery("#mapp_save_btn").click(function() {
             h();
             return false
         });
+        //
+        mQuery("#mapp_save_btn_ms").click(function() {
+            hms();
+            return false
+        });
+        //
         mQuery("#mapp_recenter_btn").click(function() {
             a[b].recenter(null, false);
             return false
@@ -752,50 +846,70 @@ function MappEditor(j, o) {
             f(mQuery("#mapp_width").val(), mQuery("#mapp_height").val());
             return false
         });
-        mQuery("#mapp_add_btn").click(function() {
-            var d = mQuery("#mapp_saddr"),
-                e = mQuery("#mapp_saddr_corrected"),
-                c = MappMap.stringToLatLng(d.val());
-            if (c) {
-                a[b].addPOI({
-                    title: c.title,
-                    body: "",
-                    address: null,
-                    correctedAddress: null,
-                    point: {
-                        lat: c.latLng.lat(),
-                        lng: c.latLng.lng()
-                    },
-                    iconid: typeof mappIcons == "undefined" ? null : mappIcons.lastIcon,
-                    viewport: null
-                });
-                return
-            }
-            a[b].geoCode(d, e, function(c) {
-                var e = MappMap.parseAddress(c[0].formatted_address);
-                a[b].addPOI({
-                    title: e.firstLine,
-                    body: e.secondLine,
-                    address: d.val(),
-                    correctedAddress: c[0].formatted_address,
-                    point: {
-                        lat: c[0].geometry.location.lat(),
-                        lng: c[0].geometry.location.lng()
-                    },
-                    iconid: typeof mappIcons == "undefined" ? null : mappIcons.lastIcon,
-                    viewport: {
-                        sw: {
-                            lat: c[0].geometry.viewport.getSouthWest().lat(),
-                            lng: c[0].geometry.viewport.getSouthWest().lng()
-                        },
-                        ne: {
-                            lat: c[0].geometry.viewport.getNorthEast().lat(),
-                            lng: c[0].geometry.viewport.getNorthEast().lng()
-                        }
+        mQuery("#mapp_add_btn")
+            .click(
+                function() {
+                    var d = mQuery("#mapp_saddr"),
+                        e = mQuery("#mapp_saddr_corrected"),
+                        c = MappMap
+                        .stringToLatLng(d.val());
+                    if (c) {
+                        a[b]
+                            .addPOI({
+                                title: c.title,
+                                body: "",
+                                address: null,
+                                correctedAddress: null,
+                                point: {
+                                    lat: c.latLng.lat(),
+                                    lng: c.latLng.lng()
+                                },
+                                iconid: typeof mappIcons == "undefined" ? null : mappIcons.lastIcon,
+                                viewport: null
+                            });
+                        return
                     }
+                    a[b]
+                        .geoCode(
+                            d,
+                            e,
+                            function(c) {
+                                var e = MappMap
+                                    .parseAddress(c[0].formatted_address);
+                                a[b]
+                                    .addPOI({
+                                        title: e.firstLine,
+                                        body: e.secondLine,
+                                        address: d.val(),
+                                        correctedAddress: c[0].formatted_address,
+                                        point: {
+                                            lat: c[0].geometry.location
+                                                .lat(),
+                                            lng: c[0].geometry.location
+                                                .lng()
+                                        },
+                                        iconid: typeof mappIcons == "undefined" ? null : mappIcons.lastIcon,
+                                        viewport: {
+                                            sw: {
+                                                lat: c[0].geometry.viewport
+                                                    .getSouthWest()
+                                                    .lat(),
+                                                lng: c[0].geometry.viewport
+                                                    .getSouthWest()
+                                                    .lng()
+                                            },
+                                            ne: {
+                                                lat: c[0].geometry.viewport
+                                                    .getNorthEast()
+                                                    .lat(),
+                                                lng: c[0].geometry.viewport
+                                                    .getNorthEast()
+                                                    .lng()
+                                            }
+                                        }
+                                    })
+                            })
                 })
-            })
-        })
     }
 
     function g() {
@@ -808,38 +922,94 @@ function MappEditor(j, o) {
             }
             c += "</table>"
         }
+        if (aaa.length > 0) {
+            c += "<table>";
+            c += "<tr data-idx='0'><td>";
+            c += "<select id='select-map-list' style='width:180px'>";
+            for (var bmn = 0; bmn < aaa.length; bmn++) {
+                var d = aaa[bmn].getTitle();
+                c += "<option value='" + bmn + "'> " + d + " [" + aaa[bmn].getMapid() + "] " + "</option>"
+            }
+            c += "</select>" + "</b><div class='mapp-maplist-links' style='visibility:hidden'><a href='#' class='mapp-maplist-edit-ms' data-idx='1'>" + mappl10n.edit + "</a> | <a href='#' class='mapp-maplist-insert-ms' data-idx='1'>" + mappl10n.insert_into_post + "</a> | <a href='#' class='mapp-maplist-delete-ms' data-idx='1'>" + mappl10n.del + "</a></div>"
+            c += "</td></tr></table>"
+        }
         mQuery("#mapp_maplist").html(c);
-        mQuery("#mapp_maplist tr").hover(function() {
-            mQuery(this).find(".mapp-maplist-links").css("visibility", "visible")
-        }, function() {
-            mQuery(this).find(".mapp-maplist-links").css("visibility", "hidden")
-        });
+        mQuery("#mapp_maplist tr").hover(
+            function() {
+                mQuery(this).find(".mapp-maplist-links").css("visibility",
+                    "visible")
+            },
+            function() {
+                mQuery(this).find(".mapp-maplist-links").css("visibility",
+                    "hidden")
+            });
         mQuery(".mapp-maplist-title").click(function() {
             var a = mQuery(this).attr("data-idx");
             m(a);
             return false
         });
+        //
+        mQuery("#select-map-list").change(function() {
+            mapNm(mQuery("#select-map-list").val());
+            return false
+        });
+        //
         mQuery(".mapp-maplist-edit").click(function() {
             var a = mQuery(this).attr("data-idx");
             n(a);
+            mQuery("#mapp_save_btn").show();
+            mQuery("#mapp_save_btn_ms").hide();
             return false
         });
-        mQuery(".mapp-maplist-insert").click(function() {
-            var c = mQuery(this).attr("data-idx"),
-                b = '[mappress mapid="' + a[c].getMapid() + '"]';
-            send_to_editor(b);
+        //
+        mQuery(".mapp-maplist-edit-ms").click(function() {
+            var a = mQuery("#select-map-list").val();
+            nms(a);
+            mQuery("#mapp_save_btn_ms").show();
+            mQuery("#mapp_save_btn").hide();
             return false
         });
+        //
+        mQuery(".mapp-maplist-insert")
+            .click(
+                function() {
+                    var c = mQuery(this).attr("data-idx"),
+                        b = '[mappress mapid="' + a[c].getMapid() + '"]';
+                    send_to_editor(b);
+                    return false
+                });
+        //
+        mQuery(".mapp-maplist-insert-ms")
+            .click(
+                function() {
+                    var cms = mQuery("#select-map-list").val(),
+                        bms = '[mappress mapid="' + aaa[cms].getMapid() + '"]';
+                    aaa[cms].ajaxMapSave(ccnn.postid, function() {
+                        aaa[cms].getMapid()
+                            //mapNm(mQuery("#select-map-list").val());
+                    })
+                    send_to_editor(bms);
+                    return false
+                });
+        //
         mQuery(".mapp-maplist-delete").click(function() {
             var a = mQuery(this).attr("data-idx");
             l(a);
             return false
-        })
+        });
+        //
+        mQuery(".mapp-maplist-delete-ms").click(function() {
+                var a = mQuery("#select-map-list").val();
+                lms(a);
+                return false
+            })
+            //
     }
 
     function k() {
         MappMap.ajaxMapCreate(c, function(c) {
             a.push(c);
+            aaa.push(c);
             b = a.length - 1;
             e(true);
             a[b].display(function() {
@@ -849,7 +1019,8 @@ function MappEditor(j, o) {
     }
 
     function h() {
-        if (b === null || mQuery("#mapp_adjust_panel").is(":hidden")) return;
+        if (b === null || mQuery("#mapp_adjust_panel").is(":hidden"))
+            return;
         mQuery("#mapp_title").val() == "" && mQuery("#mapp_title").val(mappl10n.untitled);
         a[b].setTitle(mQuery("#mapp_title").val());
         a[b].ajaxMapSave(c.postid, function() {
@@ -858,11 +1029,35 @@ function MappEditor(j, o) {
         })
     }
 
+    function hms() {
+        if (bmn === null || mQuery("#mapp_adjust_panel").is(":hidden"))
+            return;
+        //mQuery("#mapp_title").val() == ""
+        //&& mQuery("#mapp_title").val(mappl10n.untitled);
+        aaa[bmn].setTitle(mQuery("#mapp_title").val());
+        aaa[bmn].ajaxMapSave(c.postid, function() {
+            ems(false);
+            g();
+            mQuery("#select-map-list").val(bmn)
+                //mapNm(mQuery("#select-map-list").val());
+        })
+    }
+
     function m(c) {
-        if (b === c) return;
+        if (b === c)
+            return;
         a[c].display(function() {
             b = c;
             d(true)
+        })
+    }
+
+    function mapNm(c) {
+        if (bmn === c)
+            return;
+        aaa[c].display(function() {
+            bmn = c;
+            mapNd(true)
         })
     }
 
@@ -879,6 +1074,19 @@ function MappEditor(j, o) {
         })
     }
 
+    function nms(c) {
+        if (bmn === c) {
+            ems(true);
+            mapNd(true);
+            return
+        }
+        aaa[c].display(function() {
+            bmn = c;
+            ems(true);
+            mapNd(true)
+        })
+    }
+
     function l(c) {
         b = c;
         confirm(mappl10n.delete_map_prompt) && MappMap.ajaxMapDelete(a[b].getMapid(), function() {
@@ -889,11 +1097,30 @@ function MappEditor(j, o) {
         })
     }
 
+    function lms(c) {
+        bmn = c;
+        confirm(mappl10n.delete_map_prompt) && MappMap.ajaxMapDelete(aaa[bmn].getMapid(), function() {
+            aaa.splice(bmn, 1);
+            bmn = null;
+            mapNd(false);
+            g()
+        })
+    }
+
     function d(c) {
         if (c) {
             mQuery("#mapp0").show();
             f(a[b].getWidth(), a[b].getHeight())
-        } else mQuery("#mapp0").hide()
+        } else
+            mQuery("#mapp0").hide()
+    }
+
+    function mapNd(c) {
+        if (c) {
+            mQuery("#mapp0").show();
+            fmapN(aaa[bmn].getWidth(), aaa[bmn].getHeight())
+        } else
+            mQuery("#mapp0").hide()
     }
 
     function e(d) {
@@ -918,14 +1145,52 @@ function MappEditor(j, o) {
         mQuery("#mapp_saddr_corrected").html("")
     }
 
+    function ems(d) {
+        if (d) {
+            mQuery("#mapp_title").val(aaa[bmn].getTitle());
+            var c = aaa[bmn].getMapid() ? aaa[bmn].getMapid() : "New";
+            mQuery("#mapp_mapid").text(c);
+            mQuery("#mapp_insert_btn").show();
+            mQuery("#mapp_add_panel").css("visibility", "visible");
+            mQuery("#mapp_maplist_panel").hide();
+            mQuery("#mapp_adjust_panel").show();
+            aaa[bmn].setEditingMode(true)
+        } else {
+            mQuery("#mapp_add_panel").css("visibility", "hidden");
+            mQuery("#mapp_maplist_panel").show();
+            mQuery("#mapp_adjust_panel").hide();
+            mQuery("#mapp_insert_btn").hide();
+            aaa[bmn].setEditingMode(false)
+        }
+        mQuery("#mapp_saddr").removeClass("mapp-address-error");
+        mQuery("#mapp_saddr").val("");
+        mQuery("#mapp_saddr_corrected").html("")
+    }
+
     function f(e, d) {
         mQuery("#mapp_width").val(e);
         mQuery("#mapp_height").val(d);
         document.getElementById(c.mapName).style.width = e + "px";
         document.getElementById(c.mapName).style.height = d + "px";
-        if (typeof Prototype != "undefined") document.getElementById("mapp0_poi_list").style.height = d - $("mapp_adjust").getDimensions().height - 12 + "px";
-        else mQuery("#mapp0_poi_list").height(d - mQuery("#mapp_adjust").height() - 12 + "px");
+        if (typeof Prototype != "undefined")
+            document.getElementById("mapp0_poi_list").style.height = d - $("mapp_adjust").getDimensions().height - 12 + "px";
+        else
+            mQuery("#mapp0_poi_list").height(
+                d - mQuery("#mapp_adjust").height() - 12 + "px");
         a[b].resize()
+    }
+
+    function fmapN(e, d) {
+        mQuery("#mapp_width").val(e);
+        mQuery("#mapp_height").val(d);
+        document.getElementById("mapp0").style.width = e + "px";
+        document.getElementById("mapp0").style.height = d + "px";
+        if (typeof Prototype != "undefined")
+            document.getElementById("mapp0_poi_list").style.height = d - $("mapp_adjust").getDimensions().height - 12 + "px";
+        else
+            mQuery("#mapp0_poi_list").height(
+                d - mQuery("#mapp_adjust").height() - 12 + "px");
+        aaa[bmn].resize()
     }
 }
 
@@ -1249,7 +1514,8 @@ function MappIcons(b, h, e) {
         };
 
     function c() {
-        if (a) return;
+        if (a)
+            return;
         a = [];
         e && f("user", e);
         f("standard", g)
@@ -1257,7 +1523,8 @@ function MappIcons(b, h, e) {
 
     function f(f, e) {
         for (var d in e) {
-            if (a[d]) continue;
+            if (a[d])
+                continue;
             var c = {
                 type: f,
                 url: null,
@@ -1280,7 +1547,8 @@ function MappIcons(b, h, e) {
                 c.shadow.url = e[d].shadow ? b + "/" + e[d].shadow + ".png" : b + "/" + d + ".shadow.png";
                 c.shadow.anchor.x = 16;
                 c.shadow.anchor.y = 32
-            } else c.url = h + "/" + d;
+            } else
+                c.url = h + "/" + d;
             a[d] = c
         }
     }
@@ -1288,7 +1556,8 @@ function MappIcons(b, h, e) {
     function d(d) {
         var c = "<ul>";
         for (var b in a)
-            if (a[b].type == d) c += "<a style='float:left' href='#' data-iconid='" + b + "'>" + this.getIconHtml(b, true) + "</a>";
+            if (a[b].type == d)
+                c += "<a style='float:left' href='#' data-iconid='" + b + "'>" + this.getIconHtml(b, true) + "</a>";
         c += "</ul>";
         return c
     }
@@ -1321,23 +1590,28 @@ function MappIcons(b, h, e) {
     this.getIconMarker = function(h) {
         c();
         var b = a[h];
-        if (!b) return {
-            url: null,
-            shadowUrl: null
-        };
+        if (!b)
+            return {
+                url: null,
+                shadowUrl: null
+            };
         if (b.type == "standard") {
             var g = new google.maps.Point(b.anchor.x, b.anchor.y),
-                e = new google.maps.Point(b.shadow.anchor.x, b.shadow.anchor.y),
-                f = new google.maps.MarkerImage(b.url, null, null, g, null),
-                d = new google.maps.MarkerImage(b.shadow.url, null, null, e, null);
+                e = new google.maps.Point(
+                    b.shadow.anchor.x, b.shadow.anchor.y),
+                f = new google.maps.MarkerImage(
+                    b.url, null, null, g, null),
+                d = new google.maps.MarkerImage(
+                    b.shadow.url, null, null, e, null);
             return {
                 icon: f,
                 shadow: d
             }
-        } else return {
-            icon: b.url,
-            shadow: b.shadowUrl
-        }
+        } else
+            return {
+                icon: b.url,
+                shadow: b.shadowUrl
+            }
     };
     this.getIconHtml = function(b, d) {
         c();

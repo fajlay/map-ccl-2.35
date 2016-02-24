@@ -299,8 +299,12 @@ class Mappress {
 	function meta_box($post) {
 		global $post;
 
+		$mapsAll = Mappress_Map::get_list_v2();
 		$maps = Mappress_Map::get_post_map_list($post->ID);
-		Mappress_Map::edit($maps, $post->ID);
+		Mappress_Map::edit($mapsAll, $maps, $post->ID);
+		
+		//$mapsAll = Mappress_Map::get_list();
+		//Mappress_Map::edit($mapsAll, $post->ID);
 	}
 
 	/**
@@ -486,8 +490,8 @@ class Mappress {
 		add_settings_section('custom_field_settings', __('Custom Fields', 'mappress'), array(&$this, 'section_settings'), 'mappress');        
 		add_settings_field('metaKey', __('Custom fields', 'mappress'), array(&$this, 'set_meta_key'), 'mappress', 'custom_field_settings');        
 
-		//@todo add_settings_section('georss_settings', __('GeoRSS', 'mappress'), array(&$this, 'section_settings'), 'mappress');        
-		//@todo add_settings_field('geoRSS', __('GeoRSS', 'mappress'), array(&$this, 'set_georss'), 'mappress', 'georss_settings');        
+		add_settings_section('georss_settings', __('GeoRSS', 'mappress'), array(&$this, 'section_settings'), 'mappress');        
+		add_settings_field('geoRSS', __('GeoRSS', 'mappress'), array(&$this, 'set_georss'), 'mappress', 'georss_settings');        
 		
 		add_settings_section('misc_settings', __('Micsellaneous', 'mappress'), array(&$this, 'section_settings'), 'mappress'); 		
 		add_settings_field('customCSS', __('Custom CSS', 'mappress'), array(&$this, 'set_custom_css'), 'mappress', 'misc_settings');
@@ -1030,15 +1034,23 @@ class Mappress {
 	
 	function rss_item() {
 		global $post;
-		
 		if (!is_feed())
 			return;
 			
-		$maps = get_post_maps($post->ID);
+		$maps = Mappress_Map::get_post_map_list($post->ID);//($post->ID);
+		
 		foreach ($maps as $map) {
 			foreach ($map->pois as $poi) {
-				echo '<georss:point>' . $poi->point['lat'] . ' ' . $poi->point['lng'] . '</georss:point>';				
+				echo '<georss:point>' . $poi->point['lat'] . ' ' . $poi->point['lng'] . '</georss:point>';
+				
+								
 			}
+			echo "\n";
+			//echo '<![CDATA[<Nameofvenue>' . $map->title . ' ' .'</Nameofvenue>]]>';
+			echo '<Nameofvenue><![CDATA[' . $map->title . ' ' .']]></Nameofvenue>';
+			echo "\n";
+			//echo '<![CDATA[<Address>' . $poi->address . ' ' .'</Address>]]>';
+			echo '<Address><![CDATA[' . $poi->address . ' ' .']]></Address>';
 		}
 	}	
 }  // End Mappress class

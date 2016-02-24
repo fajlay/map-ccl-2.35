@@ -303,6 +303,37 @@ class Mappress_Map extends Mappress_Obj {
 
 		return $maps;
 	}
+	
+	function get_list_v2() {
+		global $wpdb;
+		$maps_table = $wpdb->prefix . 'mappress_maps';
+		$results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $maps_table where VnO = 2"));
+
+		if ($results === false)
+			return false;
+
+		// Fix up mapid
+		foreach ($results as $result) {
+			$map = unserialize($result->obj);
+			$map->mapid = $result->mapid;
+			$maps[] = $map;
+		}
+
+		$map_key_array = array();
+		foreach($maps as $map_element)
+		{
+			$map_key_array[$map_element->title] = $map_element;
+		}
+		ksort($map_key_array);
+		
+		$maps_sorted = array();
+		foreach ($map_key_array as $map_element)
+		{
+			$maps_sorted[] = $map_element;
+		}
+		
+		return $maps_sorted;
+	}
 
 	function save($postid) {
 		global $wpdb;
@@ -320,17 +351,24 @@ class Mappress_Map extends Mappress_Obj {
 			// Id provided, so insert or update
 			$result = $wpdb->query($wpdb->prepare("INSERT INTO $maps_table (mapid, obj) VALUES(%d, '%s') ON DUPLICATE KEY UPDATE obj = %s", $this->mapid, $map, $map));
 		}
-
+		
 		if ($result === false || !$this->mapid)
 			return false;
+		//{
+			//$tmp1 = explode(']',$_POST['select-map-list']);
+	  		//$tmp2 = split('[',$tmp1[0]);
+	  		//$this->mapid = $tmp2[0];
+		//}
+			
 
-		// Update posts
-		$result = $wpdb->query($wpdb->prepare("INSERT INTO $posts_table (postid, mapid) VALUES(%d, %d) ON DUPLICATE KEY UPDATE postid = %d, mapid = %d", $postid, $this->mapid,
-			$postid, $this->mapid));
+		// Update posts 
+		///Edited by me  -start
+	///$result = $wpdb->query($wpdb->prepare("INSERT INTO $posts_table (postid, mapid) VALUES(%d, %d) ON DUPLICATE KEY UPDATE postid = %d, mapid = %d", $postid, $this->mapid,
+			///$postid, $this->mapid));
 
-		if ($result === false)
-			return false;
-
+		///if ($result === false)
+			///return false;
+    ///Edited by me -finish
 		$wpdb->query("COMMIT");
 		return $this->mapid;
 	}
@@ -527,7 +565,7 @@ class Mappress_Map extends Mappress_Obj {
 		return $html;
 	}
 
-	function edit($maps = null, $postid) {
+	function edit($mapsAll = null, $maps = null, $postid) {
 		global $mappress;
 
 		// Set options for editing
@@ -546,10 +584,11 @@ class Mappress_Map extends Mappress_Obj {
 		Mappress_Map::_load($options);
 		echo "<script type='text/javascript'>"
 			. "/* <![CDATA[ */"
+			. "var mapdataAll = " . json_encode($mapsAll) . ";"
 			. "var mapdata = " . json_encode($maps) . ";"
 			. "var options = " . json_encode($options) . ";"
 			. "var version = '" . $mappress->get_version() . "';"
-			. "var mappEditor = new MappEditor(mapdata, options);"
+			. "var mappEditor = new MappEditor(mapdataAll, mapdata, options);"
 			. "/* ]]> */"
 			. "</script>";
 
@@ -621,6 +660,7 @@ class Mappress_Map extends Mappress_Obj {
 									</p>
 									<p class='submit' style='padding: 0; float: none' >
 										<input class='button-primary' type='button' id='mapp_save_btn' value='<?php _e('Save', 'mappress'); ?>' />
+										<input class='button-primary' type='button' id='mapp_save_btn_ms' value='<?php _e('Save', 'mappress'); ?>' />
 										<input type='button' id='mapp_recenter_btn' value='<?php _e('Center', 'mappress'); ?>' />
 									</p>
 									<hr/>
@@ -631,6 +671,39 @@ class Mappress_Map extends Mappress_Obj {
 					</td>
 					<td id='mapp_preview_panel' valign='top'>
 						<div id='<?php echo $options->mapName?>' class='mapp-edit-canvas'></div>
+					</td>
+				</tr>
+			</table>
+			
+			<table style='width:100%'>
+				<tr>
+					<td valign="top">
+						<div id='mapp_left_panel_p' style='display:none'>
+							<div id='mapp_maplist_panel_p'>
+								<p>
+									<b><?php _e('Select Maps', 'mappress')?></b>
+								</p>
+								<select class="mapp-maplist-title-p" data-idx="0">
+								  <option>Select</option>
+								  <option>[353] Untitled</option>
+								  <option>[361] Untitled</option>
+								</select>
+								<div id='mapp_maplist_p'></div>
+							</div>
+
+							<div id='mapp_adjust_panel_p'>
+								<div id='mapp_adjust_p'>
+									<p class='submit' style='padding: 0; float: none' >
+										<input class='button-primary' type='button' id='mapp_select_btn_p' value='<?php _e('Select', 'mappress'); ?>' />
+									</p>
+									<hr/>
+								</div>
+								<div id='<?php echo $options->mapName?>_poi_list_p' class='mapp-edit-poi-list'></div>
+							</div>
+						</div>
+					</td>
+					<td id='mapp_preview_panel_p' valign='top'>
+						<div id='<?php echo $options->mapName?>_p' class='mapp-edit-canvas'></div>
 					</td>
 				</tr>
 			</table>
